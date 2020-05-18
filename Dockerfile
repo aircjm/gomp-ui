@@ -1,13 +1,9 @@
-# build stage
-FROM node:lts-alpine as build-stage
+FROM nginx:stable-alpine
 WORKDIR /app
-COPY package*.json ./
-RUN npm install
-COPY . .
-RUN npm run build
-
-# production stage
-FROM nginx:stable-alpine as production-stage
-COPY --from=build-stage /app/dist /usr/share/nginx/html
+# Copy in the static build assets
+COPY dist/ /app/
+# Copy in the nginx config file
+COPY misc/nginx.conf /etc/nginx/nginx.conf
+# All files are in, start the web server
 EXPOSE 80
-CMD ["nginx", "-g", "daemon off;"]
+CMD ["nginx"]
