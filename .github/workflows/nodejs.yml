@@ -29,7 +29,7 @@ jobs:
       env:
         CI: true
     - name: Build image
-      run: docker build . -t aircjm/gomp-ui
+      run: docker build . -t aircjm/gomp-ui:1.0.0
     - name: publish image
       uses: docker/build-push-action@v1
       with:
