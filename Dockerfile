@@ -1,13 +1,9 @@
-# build stage
-FROM node:lts-alpine as build-stage
-WORKDIR /app
-COPY package*.json ./
-RUN npm install
-COPY . .
-RUN npm run build
-
-# production stage
-FROM nginx:stable-alpine as production-stage
-COPY --from=build-stage /app/dist /usr/share/nginx/html
-EXPOSE 80
-CMD ["nginx", "-g", "daemon off;"]
+#导入nginx镜像
+FROM nginx:1.13.7
+MAINTAINER amosannn <amosannn@gmail.com>
+#把当前打包工程的html复制到虚拟地址
+COPY dist/ /usr/share/nginx/html/
+#使用自定义nginx.conf配置端口和监听
+RUN rm /etc/nginx/conf.d/default.conf
+ADD default.conf /etc/nginx/conf.d/
+RUN /bin/bash -c 'echo init ok!!!'
